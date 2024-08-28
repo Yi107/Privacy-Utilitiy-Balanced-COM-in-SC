@@ -121,9 +121,6 @@ float randomNum(float *random)
 	return 0;
 }
 
-
-
-//[-r,r] 概率分布满足ppt2
 float noiseSettingForLocal(float epsilon, float radius, float *noise)
 {
 	float random_u = 0;
@@ -152,13 +149,12 @@ void locationPerturb(double real_lat, double real_lon, float epsilon, float radi
 	float cosValue = cos((float)random * M_PI / 180.0);
 	float sinValue = sin((float)random * M_PI / 180.0);
 	float rrand = 0;
-	noiseSettingForLocal(epsilon, radius, &rrand);//noise的单位是km,要在km上做扰动
+	noiseSettingForLocal(epsilon, radius, &rrand);
 	ZtGeographyCoordinateTransform ztGCT;
 	double lx = 0, ly = 0;
 	float newx = 0, newy = 0;
 	double lat, lon, ht;
 	ztGCT.BL2XY(real_lat, real_lon, lx, ly);
-	//lx,ly都是以米为单位的
 	//cout << lx << " " << ly << endl;
 	lx = lx / 1000;
 	ly = ly / 1000;
@@ -212,7 +208,6 @@ void avaWLocationPerturb(double real_lat, double real_lon, int angle, double *pe
 	float newx = 0, newy = 0;
 	double lat, lon, ht;
 	ztGCT.BL2XY(real_lat, real_lon, lx, ly);
-	//lx,ly都是以米为单位的
 	//cout << lx << " " << ly << endl;
 	lx = lx / 1000;
 	ly = ly / 1000;
