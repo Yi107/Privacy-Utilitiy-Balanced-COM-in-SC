@@ -1,5 +1,7 @@
 # Privacy-Utilitiy-Balanced-COM-in-SC
 
+We provide the real datasets and synthetic datasets used in the experimental part in this repository. We also provide the source code of the algorithms. 
+
 For the dataset of worker, it contains 9 parts. Id, Platform id, Radius, Apperance time, Latitude of apperance location, Longtitude of apperance location, Historical request value, Historical unit price, The distribution of historical unit price.
 
 For the dataset of request, it contains 10 parts. Id, Platform id, Apperance time, Finishing time, Latitude of apperance location, Longtitude of apperance location, Latitude of ending location, Longtitude of ending location, Travel distance, Payment.
