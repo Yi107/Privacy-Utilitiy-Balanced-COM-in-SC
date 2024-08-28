@@ -15,13 +15,9 @@ map<int, vector<int>> finishedOuterWorkerTasks;
 
 void find_avai_worker(multiset<Worker>* workers, Task* task, map<int, multiset<Worker>> *avaiWorker)
 {
-
-	//int workernum = 0;
 	float task_x = task->x, task_y = task->y;
 	for (multiset<Worker>::iterator it = workers->begin(); it != workers->end(); it++)
 	{
-		//workernum++;
-		//Worker worker = *it;
 		if (it->arrive > task->arrive)
 		{
 			break;
@@ -44,39 +40,24 @@ void find_avai_worker(multiset<Worker>* workers, Task* task, map<int, multiset<W
 
 		}
 
-	}
-
-	//cout << "worker num " << workernum;
-	
+	}	
 }
 
 void find_extended_avai_worker(multiset<Worker>* workers, Task* task, float epsilon, int angle, map<int, multiset<Worker>> *avaiWorker, map<int, multiset<Worker>> *perturbedWorker, map<int,multiset<Worker>> *usedCalPrice)
 {
-	//ofstream findout("FindTime",ios::app);
-
-	//int workernum = 0;
 	float task_x = task->x, task_y = task->y;
 	double duration = 0;
 	for (multiset<Worker>::iterator it = workers->begin(); it != workers->end(); it++)
 	{
-		//¹¤ÈËÎ»ÖÃÈÅ¶¯
 		Worker perturbedw = *it;
 		double perturbed_lat = 0, perturbed_lon = 0;
-		
 		avaWLocationPerturb(perturbedw.x, perturbedw.y, angle, &perturbed_lat, &perturbed_lon);
-		
 		if (maxCalAvaw < duration)
 		{
-			//findout << "avaWLocationPerturb: " << duration << endl;
 			maxCalAvaw = duration;
 		}
 		perturbedw.x = perturbed_lat;
 		perturbedw.y = perturbed_lon;
-
-
-
-		//workernum++;
-		//Worker worker = *it;
 		if (it->arrive > task->arrive)
 		{
 			break;
@@ -84,12 +65,9 @@ void find_extended_avai_worker(multiset<Worker>* workers, Task* task, float epsi
 		float worker_x = it->x, worker_y = it->y;
 		float dis = get_distance(task_x, task_y, worker_x, worker_y);
 		float extend_r = 0;
-		
 		extendRadius(it->radius, epsilon, &extend_r);
-		
 		if (maxCalAvaw < duration)
 		{
-			//findout << "extendRadius: " << duration << endl;
 			maxCalAvaw = duration;
 		}
 	
@@ -110,8 +88,6 @@ void find_extended_avai_worker(multiset<Worker>* workers, Task* task, float epsi
 				avaiWorker->insert(make_pair(it->type, w1));
 				perturbedWorker->insert(make_pair(it->type, w2));
 			}
-
-
 			if (dis <= it->radius) {
 				map<int, multiset<Worker>>::iterator icp = usedCalPrice->find(it->type);
 				if (icp != usedCalPrice->end())
@@ -124,17 +100,9 @@ void find_extended_avai_worker(multiset<Worker>* workers, Task* task, float epsi
 						w.insert(*it);
 						usedCalPrice->insert(make_pair(it->type, w));
 					}
-
-				
-			
 			}
-
 		}
-
 	}
-
-	//cout << "worker num " << workernum;
-
 }
 
 
@@ -144,13 +112,10 @@ multiset<Worker>::iterator find_my_worker(multiset<Worker>* workers, Task* task)
 	multiset<Worker>::iterator ans_it = workers->end();
 	float ans_dis = 1000000000.0;
 	float task_x = task->x, task_y = task->y;
-	//int mywor = 0;
 	for (multiset<Worker>::iterator it = workers->begin(); it != workers->end(); it++)
 	{
-		//mywor++;
-		
 		Worker worker = *it;
-		if (worker.arrive > task->arrive) // ÕâÀïmapÊÇ°´ÕÕÊ±¼äÅÅºÃĞòµÄ£¬³¬¹ıÊ±¼äÖ®ºóµÄ¾Í¶¼ÊÇÃ»À´µÄ
+		if (worker.arrive > task->arrive) 
 		{
 			break;
 		}
@@ -163,24 +128,21 @@ multiset<Worker>::iterator find_my_worker(multiset<Worker>* workers, Task* task)
 			break;
 		}
 	}
-	//cout << " my worker " << mywor ;
 	return ans_it;
 }
 
 
 Worker find_other_worker(multiset<Worker> workers, float value, Task* task) {
-	//ofstream wp("workerprob", ios::app);
 	multiset<Worker>::iterator ans_it = workers.end();
 	float ans_dis = 1000000000.0;
 	float ans_p = 0;
 	float task_x = task->x, task_y = task->y;
 	int cum = 0;
 	
-	//srand((unsigned)time(NULL));
 	for (multiset<Worker>::iterator it = workers.begin(); it != workers.end(); it++)
 	{
 		Worker worker = *it;
-		if (worker.arrive > task->arrive) // ÕâÀïmapÊÇ°´ÕÕÊ±¼äÅÅºÃĞòµÄ£¬³¬¹ıÊ±¼äÖ®ºóµÄ¾Í¶¼ÊÇÃ»À´µÄ
+		if (worker.arrive > task->arrive) 
 		{
 			break;
 		}
@@ -208,19 +170,11 @@ Worker find_other_worker(multiset<Worker> workers, float value, Task* task) {
 			}
 			if (p <= sp && dis < ans_dis)
 			{
-				//wp << "Task_id: " << task->id << " ";
-				//wp << "Random_p: " << p << " worker_p: " << sp << endl;
 				ans_it = it;
 				ans_dis = dis;
 				
 			}
 		}
-	}
-	if (cum == 0)
-	{
-		//ofstream failedD("FailedTasks", ios::app);
-		rejectBydis++;
-		//failedD << "Task id " << task->id << " Type: " << task->type << " Task Price: " << task->value << " " << 1 << endl;
 	}
 	if (ans_it != workers.end())
 	{
@@ -234,8 +188,6 @@ Worker find_other_worker(multiset<Worker> workers, float value, Task* task) {
 	}
 }
 
-//ÏÖÔÚµÄ¶¨¼ÛËã·¨ÊÇÃ¿¸ö¹¤ÈË½«×Ô¼º¾ù¼ÛµÄÆÚÍûµ±×÷ÆÀ¼Ûº¯Êı×öµÄ£¬·µ»ØµÄÊÇ¾ù¼Û¡£
-
 void calculatePricePlus(map<string, int>* totalnum, float epsilon, float* outprice)
 {
 	*outprice = 0;
@@ -243,47 +195,40 @@ void calculatePricePlus(map<string, int>* totalnum, float epsilon, float* outpri
 	map<string, float> meanMap;
 	map<string, int>::iterator itot = totalnum->begin();
 	int totNum = 0;
-	//µ¥¼Û Ğ¡ÓÚ¸Ãµ¥¼ÛµÄ¸öÊı
 	for (; itot != totalnum->end(); itot++)
 	{
 		totNum += itot->second;
 		basePro.insert(make_pair(itot->first, totNum));
 	}
 	itot = basePro.begin();
-	//µ¥¼Û ÆÚÍû£¨¼Û¸ñ*£¨1-¸ÅÂÊ£©£©
 	for (; itot != basePro.end(); itot++)
 	{
 		float avp = atof(itot->first.c_str());
 		float mean = avp * (1 - 1.0 * itot->second / totNum);
 		meanMap.insert(make_pair(itot->first, mean));
 	}
-	//¸ù¾İÆÚÍûÉè¼ÆÖ¸Êı»úÖÆ ÆÚÍûÊÇÆÀ¼Ûº¯Êı
 	map<string, float> expFunc;
 	float totalFunc = 0;
 	*outprice = 0;
 	map<string, float>::iterator ti = meanMap.begin();
 	float maxAvg = atof(meanMap.rbegin()->first.c_str());
-
 	for (; ti != meanMap.end(); ti++)
 	{
 		float num = ti->second;
 		float expNum = 0;
 		if (epsilon != 0)
 		{
-			//Ö¸Êı»úÖÆ¼ÆËãº¯Êı
-			expNum = exp(epsilon * num / (2 * 0.05 * maxAvg));//Ãô¸Ğ¶È»¹Ğè¼ÆËã
+			expNum = exp(epsilon * num / (2 * 0.05 * maxAvg));
 		}
 		else {
 			expNum = num;
 		}
 		totalFunc += expNum;
-		//±£´æÖ¸Êı»úÖÆ¼ÆËã½á¹û
 		expFunc.insert(make_pair(ti->first, expNum));
 	}
 	map<string, float> probExp;
 	map<string, float>::iterator expi = expFunc.begin();
 	float tempPro = 0;
-	//¸ù¾İÖ¸Êı»úÖÆ¼ÆËã½á¹û»ñµÃ¸ÅÂÊ
 	for (; expi != expFunc.end(); expi++)
 	{
 		float prob = expi->second / totalFunc;
@@ -293,7 +238,6 @@ void calculatePricePlus(map<string, int>* totalnum, float epsilon, float* outpri
 	map<string, float>::iterator proi = probExp.begin();
 	float randPro = rand() % (NN + 1) / (float)(NN + 1);
 	float minP = 0, maxP;
-	//¸ù¾İ¸ÅÂÊÊä³ö
 	for (; proi != probExp.end(); proi++)
 	{
 		maxP = proi->second;
@@ -307,15 +251,10 @@ void calculatePricePlus(map<string, int>* totalnum, float epsilon, float* outpri
 	}
 }
 
-
-//ĞÂ¶¨¼Ûº¯Êı Input: ava_worker, dis, epsilon; Output: set of price. <int, float>(type, price).
 void calEveryPlus(map<int, multiset<Worker>>* ava_worker, float dis, float epsilon, map<int, float>* priceSet)
 {
-	//µ±¶©µ¥¾àÀëĞ¡ÓÚÒ»¹«ÀïÊ±£¬¼Û¸ñÉèÎª9£¬Ëæ»ú·ÖÅä¸øÒ»¸öÆ½Ì¨
 	int mintype = -1;
 	float minPrice = 10000;
-
-	
 	map<int, multiset<Worker>>::iterator iw = ava_worker->begin();
 	if (dis <= 1)
 	{
@@ -326,11 +265,9 @@ void calEveryPlus(map<int, multiset<Worker>>* ava_worker, float dis, float epsil
 	}
 	else
 	{
-		//Ñ­»·cop platform
 		for (; iw != ava_worker->end(); iw++)
 		{
 			minPrice = 10000;
-			//Ñ­»·µÚiw¸öplatformµÄavaWorkers
 			multiset<Worker>::iterator w = iw->second.begin();
 			for (; w != iw->second.end(); w++)
 			{
@@ -396,8 +333,6 @@ void calMinForEveryPlus(map<int, multiset<Worker>>* ava_worker, float dis, int* 
 	
 }
 
-
-//ÈÅ¶¯¹¤ÈË¼ÆËãÍê³É¸ÅÂÊ Input: request_lat, request_lng, radius, angle,perturbed_lat, perturbed_lng. Output: probability
 void calProb(float r_lat, float r_lng, float radius, int angle, float perw_lat, float perw_lng, float *prob)
 {
 	float a, b, c;
@@ -453,15 +388,7 @@ void calProb(float r_lat, float r_lng, float radius, int angle, float perw_lat, 
 }
 
 
-//Ñ¡ÔñÆ½Ì¨º¯Êı
-//Input: perturbed workers, request.Output : selected Platform.
-void selectPlatform(map<int,multiset<Worker>> perturbedW, Task t, int *platform)
-{
-
-}
-
-
-void Tripsolve(Task* task, multiset<Worker>* myWorkers, map<int, multiset<Worker>*> *otherWorkers, vector<tuple<int, int, float> >* M, map<int, vector<int>>* matchNum, map<int, vector<double>>* rev, float epsilon, float geoepsilon)//matchNum: id, ´ËidÏÂÍê³ÉµÄtaskÊıÁ¿,ÍâÅÉ³öÈ¥µÄÊıÁ¿,ÍâÅÉ½ÓÊÜµÄÊıÁ¿
+void Tripsolve(Task* task, multiset<Worker>* myWorkers, map<int, multiset<Worker>*> *otherWorkers, vector<tuple<int, int, float> >* M, map<int, vector<int>>* matchNum, map<int, vector<double>>* rev, float epsilon, float geoepsilon)//matchNum: id, æ­¤idä¸‹å®Œæˆçš„taskæ•°é‡,å¤–æ´¾å‡ºå»çš„æ•°é‡,å¤–æ´¾æ¥å—çš„æ•°é‡
 {
 	clock_t start, end, start1, end1, start2, end2;
 	int type = task->type;
@@ -469,8 +396,6 @@ void Tripsolve(Task* task, multiset<Worker>* myWorkers, map<int, multiset<Worker
 	multiset<Worker>::iterator my_aviWorker;	
 	if (task->value > exp(3))
 	{
-		//cout << " in " << endl;
-		//start = clock();
 		my_aviWorker = find_my_worker(myWorkers, task);
 		if (my_aviWorker != myWorkers->end())
 		{
@@ -526,8 +451,7 @@ void Tripsolve(Task* task, multiset<Worker>* myWorkers, map<int, multiset<Worker
 			}
 
 		}
-		//end = clock();
-		//cout << " in " << ((double)(end - start) / CLK_TCK) << endl;
+		
 	}
 	else
 	{	
@@ -536,24 +460,13 @@ void Tripsolve(Task* task, multiset<Worker>* myWorkers, map<int, multiset<Worker
 		string finalPrice = "FinalPrice";
 		string outerRDetails = "outerRDetails";
 		string durationFile = "maxDuration";
-		/*string outFile1 = "outInfo1";
-		string outFile2 = "outInfo2";
-		string outFile3 = "outInfo3";*/
-		/*ofstream ffp(finalPrice, ios::app);
-		ofstream durationmx(durationFile, ios::app);
-		ofstream ord(outerRDetails, ios::app);*/
-		/*ofstream out1(outFile1, ios::app);
-		ofstream out2(outFile2, ios::app);
-		ofstream out3(outFile3, ios::app);
-*/
 		start = clock();
 		int angle = 0;
 		map<int, multiset<Worker>> ava_worker;
-		map<int, multiset<Worker>> per_worker;//ÈÅ¶¯ºóµÄ¹¤ÈË
-		map<int, multiset<Worker>> cal_PriceWorker;//ÓÃÀ´¹À¼ÛµÄ¹¤ÈË
+		map<int, multiset<Worker>> per_worker;
+		map<int, multiset<Worker>> cal_PriceWorker;
 		double duration = 0;
 		if (geoepsilon != 0) {
-			
 			pri_task = *task;
 			float x, y, prip, newx, newy;
 			float noise1=0, noise2=0;
@@ -561,55 +474,24 @@ void Tripsolve(Task* task, multiset<Worker>* myWorkers, map<int, multiset<Worker
 			x = task->x;
 			y = task->y;
 			prip = task->value;
-			//ZtGeographyCoordinateTransform ztGCT;
-			//double lx = 0, ly = 0;
-
 			double lat=0, lon=0, ht;
-
-			//ztGCT.BL2XY(x, y, lx, ly);
-			////Set uni to km and perturbed z.
-			//lx = lx/1000 ;
-			//ly = ly/1000;
-			////location privacy alogrithm need to be changed. Input lat,lng, out put: perturbed lat lng, theta
-			//noiseSettingForLocal(geoepsilon, myWorkers->begin()->radius, &noise1);
-			//randomAngle(&randomA);
-			////set_privacy(lx, ly, geoepsilon, &newx, &newy);
-			//newx = lx + cos((float)randomA * M_PI / 180.0)*noise1;
-			//newy = ly + sin((float)randomA * M_PI / 180.0)*noise1;
-			//newx = newx*1000 ;
-			//newy = newy*1000 ;
-			//ztGCT.XY2BL(newx, newy, lat, lon);
-			
 			start = clock();
 			locationPerturb(x,y, geoepsilon, myWorkers->begin()->radius, &lat, &lon, &angle);
 			end = clock();
-			/*duration = ((double)(end - start) / CLK_TCK);
-			if (maxduration < duration)
-			{
-				durationmx << "Location Perturbed time cost: " << duration << endl;
-				maxduration = duration;
-			}*/
 			pri_task.x = lat;
 			pri_task.y = lon;
-
-
-			//ÕâÒ»²½ÊÇÕÒ¿ÉÓÃ¹¤ÈË£¬ÓÃÓÚ¶¨¼Û¡£¶ÔÓÚÀ©µÄËã·¨£¬Ê×ÏÈÏÈÀ©°ë¾¶£¬ÔÙÕÒ¿ÉÓÃ¹¤ÈË
-	
 			map<int, multiset<Worker>*>::iterator oti = otherWorkers->begin();
 			for (;oti!=otherWorkers->end();oti++)
 			{
 				map<int, multiset<Worker>> avaiWorker;
 				map<int, multiset<Worker>> perWorker;
 				map<int, multiset<Worker>> calPriceWorker;
-				//find_avai_worker(oti->second, &pri_task,&avaiWorker);
-				//À©Õ¹ºóµÄ°ë¾¶ÕÒ¿ÉÓÃ¹¤ÈË²¢ÈÅ¶¯
 				start = clock();
 				find_extended_avai_worker(oti->second, &pri_task, geoepsilon,angle, &avaiWorker,&perWorker, &calPriceWorker);
 				end = clock();
 				duration = ((double)(end - start) / CLK_TCK);
 				if (maxduration < duration)
 				{
-					//durationmx << "find_extended_avai_worker time cost: " << duration << endl;
 					maxduration = duration;
 				}
 				
@@ -625,26 +507,18 @@ void Tripsolve(Task* task, multiset<Worker>* myWorkers, map<int, multiset<Worker
 				}
 			}
 
-			//ava_worker = find_avai_worker(&otherWorkers, &pri_task);
-
 		}
 		else {			
 			map<int, multiset<Worker>*>::iterator oti = otherWorkers->begin();
 			for (; oti != otherWorkers->end(); oti++)
 			{
-				//start1 = clock();
 				map<int, multiset<Worker>> avaiWorker;
 				find_avai_worker(oti->second, task, &avaiWorker);
 				if (!avaiWorker.empty())
 				{
 					ava_worker.insert(*avaiWorker.begin());
 				}
-				//end1 = clock();
-				//cout << " select " << ((double)(end1 - start1) / CLK_TCK);
 			}
-		
-			
-			//ava_worker = find_avai_worker(&otherWorkers, task);
 		}
 
 
@@ -662,38 +536,16 @@ void Tripsolve(Task* task, multiset<Worker>* myWorkers, map<int, multiset<Worker
 			nu.push_back(1);
 			matchNum->insert(make_pair(type, nu));
 		}
-
-		//ofstream failedD("FailedTasks", ios::app);
 		if (ava_worker.size() == 0)
 		{
-
-			//failedD << "Task id " << task->id << " Type: " << task->type << " Task Price: " << task->value << " " << 0 << endl;
 			rejectByNoAv++;
 			return;
 		}
 
-		else {
-
-			//ofstream abletoPerform("abletoPerform",ios::app);
-			//abletoPerform << task->id ;
-			/*if (ava_worker.size() == 1)
-			{
-				abletoPerform << " " << ava_worker.begin()->first << endl;
-			}
-			else {
-				abletoPerform << " " << ava_worker.begin()->first << " " << ava_worker.rbegin()->first << endl;
-			}*/
-		
-		}
 
 		map<int, float> priceSet;
 		int mintype;
 		float minpri = 0;
-		//calMinForEvery(&ava_worker, &minAvg);
-		//caltotMin(&minAvg, task->distance, &mintype, &minpri);
-		//start2 = clock();
-		//¶¨¼Ûº¯ÊıÒª¸Ä£¬ÏÈÓÃÕâ¸ö¶¨¼Ûº¯ÊıÅÜ²âÊÔ¡£
-		//ĞÂ¶¨¼Ûº¯Êı Input: ava_worker, dis, epsilon; Output: set of price. <int, float>(type, price).
 		start = clock();
 		if (cal_PriceWorker.size() != 0)
 		{
@@ -703,27 +555,12 @@ void Tripsolve(Task* task, multiset<Worker>* myWorkers, map<int, multiset<Worker
 			calEveryPlus(&ava_worker, task->distance, epsilon, &priceSet);
 		}
 		end = clock();
-		//duration = ((double)(end - start) / CLK_TCK);
-		/*if (maxduration < duration)
-		{
-			durationmx << "calculate price time cost: " << duration << endl;
-			maxduration = duration;
-		}*/
-
-
-		//calMinForEveryPlus(&ava_worker, task->distance, &mintype, &minpri, epsilon);
 		
-		//¶¨¼ÛÊ§°Ü
 		if (priceSet.size() == 0)
 		{
 			priceFailed++;
 			return;
 		}
-
-		//¶¨¼Û³É¹¦£¬·ÅÈëÍ³¼ÆÖµ3ÄÚ¡£
-		
-
-		//Ê×ÏÈÅĞ¶Ï¼Û¸ñÊÇ·ñĞ¡ÓÚ¶©µ¥¼Û¸ñ£¬Èç¹û²»Ğ¡ÓÚ£¬ËùÔÚÆ½Ì¨²»²ÎÓëºÏ×÷
 		map<int, float>::iterator ip = priceSet.begin();
 		vector<int> avaPlatform;
 		for (; ip != priceSet.end(); ip++)
@@ -733,16 +570,13 @@ void Tripsolve(Task* task, multiset<Worker>* myWorkers, map<int, multiset<Worker
 				avaPlatform.push_back(ip->first);
 			}
 		}
-		if (avaPlatform.size() == 0)//Ã»ÓĞÆ½Ì¨¼Û¸ñĞ¡ÓÚ¶©µ¥¼Û¸ñ
+		if (avaPlatform.size() == 0)//æ²¡æœ‰å¹³å°ä»·æ ¼å°äºè®¢å•ä»·æ ¼
 		{
 			rejectByPrice++;
 			return;
 		}
 
-		//¸ù¾İ¼Û¸ñºÍÈÅ¶¯Î»ÖÃºóµÄ¹¤ÈËÑ¡ÔñÆ½Ì¨ Input: perturbed workers, request. Output: selected Platform.
 		string probfile = "eachprob";
-		//ofstream ep(probfile, ios::app);
-		//ep << "Task: " << task->id;
 		int selectedPlatform = -1;
 		float maxPro = 0; 
 		for (int i = 0; i < avaPlatform.size(); i++)
@@ -752,7 +586,6 @@ void Tripsolve(Task* task, multiset<Worker>* myWorkers, map<int, multiset<Worker
 			multiset<Worker> perturbedWorker = per_worker.find(avaPlatform[i])->second;
 			if (perturbedWorker.size() != 0)
 			{
-				//Ñ¡Ôñº¯Êı
 				multiset<Worker>::iterator ppw = perturbedWorker.begin();
 				for (; ppw != perturbedWorker.end(); ppw++)
 				{
@@ -769,20 +602,9 @@ void Tripsolve(Task* task, multiset<Worker>* myWorkers, map<int, multiset<Worker
 					}
 				}	
 			}
-			//ep << " Platform " << avaPlatform[i] << " Prob: " << tempMax<<" ";
-
 			end = clock();
-			/*duration = ((double)(end - start) / CLK_TCK);
-			if (maxduration < duration)
-			{
-				durationmx << "select platform cost: " << duration << endl;
-				maxduration = duration;
-			}*/
 		}
-		//ep << endl;
 		
-
-		//Èç¹û¿ÉÓÃ¹¤ÈË·µ»ØµÄ¸ÅÂÊ¶¼ÊÇ0£¬ÄÇÃ»ÓĞ¹¤ÈËÄÜÍê³É
 		if (maxPro == 0)
 		{
 			probZero++;
@@ -792,22 +614,12 @@ void Tripsolve(Task* task, multiset<Worker>* myWorkers, map<int, multiset<Worker
 
 		multiset<Worker> selectedWorker = ava_worker.find(selectedPlatform)->second; 
 		float outerPrice = priceSet.find(selectedPlatform)->second;
-		//ffp << "Task id " << task->id << " Platform " << selectedPlatform << " OP: " << outerPrice << endl;
 
 		Worker other_aviWorker;
-		//ÕÒÈ«²¿µÄ¹¤ÈË
 		start = clock();
 
-		//¸ü¸Ä²¿·Ö
-		//other_aviWorker = find_other_worker(selectedWorker, outerPrice, task);
 		other_aviWorker = find_other_worker(selectedWorker, outerPrice, &pri_task);
-		/*end = clock();
-		duration = ((double)(end - start) / CLK_TCK);
-		if (maxduration < duration)
-		{
-			durationmx << "select final worker cost: " << duration << endl;
-			maxduration = duration;
-		}*/
+		
 		if (other_aviWorker.id == -1)
 		{
 			rejectFinal++;
@@ -827,7 +639,6 @@ void Tripsolve(Task* task, multiset<Worker>* myWorkers, map<int, multiset<Worker
 				finishedOuterWorkerTasks.insert(make_pair(other_aviWorker.id, temp));
 			}
 			outworkertype = other_aviWorker.type;
-			//ord << "Task: " << task->id << " Type: " << task->type << " Finished Platform " << outworkertype << " Price " <<task->value<<" OuterP "<< outerPrice << endl;
 			map<int, multiset<Worker>*>::iterator imi = otherWorkers->find(other_aviWorker.type);
 			for (multiset<Worker>::iterator it = imi->second->begin(); it != imi->second->end(); it++)
 			{
@@ -865,7 +676,6 @@ void Tripsolve(Task* task, multiset<Worker>* myWorkers, map<int, multiset<Worker
 			}
 
 			map<int, vector<double>>::iterator revI = rev->find(type);
-			//¼ÆËãtaskËùÔÚÆ½Ì¨µÄÊÕÒæ
 			if (revI != rev->end())
 			{
 				float revn = revI->second[0];
@@ -879,15 +689,12 @@ void Tripsolve(Task* task, multiset<Worker>* myWorkers, map<int, multiset<Worker
 			else
 			{
 				vector<double> re;
-				//re.push_back(totPrice);
 				re.push_back(task->value - outerPrice);
 				re.push_back(outerPrice);
 				re.push_back(0);
 				re.push_back(0);
 				rev->insert(make_pair(type, re));
 			}
-
-			//ºÏ×÷Æ½Ì¨rev¸üĞÂ
 			revI = rev->find(outworkertype);
 			if (revI != rev->end())
 			{
@@ -911,28 +718,13 @@ void Tripsolve(Task* task, multiset<Worker>* myWorkers, map<int, multiset<Worker
 				rev->insert(make_pair(type, re));
 			}
 
-			//Êä³öouter r
-			/*if (outworkertype == 1)
-			{
-				out1 << task->arrive << " " << task->value << " " << outerPrice << endl;
-			}
-
-			if (outworkertype == 2)
-			{
-				out2 << task->arrive << " " << task->value << " " << outerPrice << endl;
-			}
-
-			if (outworkertype == 3)
-			{
-				out3 << task->arrive << " " << task->value << " " << outerPrice << endl;
-			}*/
+			
 		}
 		end = clock();
-		//cout << " out " << ((double)(end - start) / CLK_TCK) << endl;
 	}
 }
 
-void TripNoSelectionsolve(Task* task, multiset<Worker>* myWorkers, map<int, multiset<Worker>*> *otherWorkers, vector<tuple<int, int, float> >* M, map<int, vector<int>>* matchNum, map<int, vector<double>>* rev, float epsilon, float geoepsilon)//matchNum: id, ´ËidÏÂÍê³ÉµÄtaskÊıÁ¿,ÍâÅÉ³öÈ¥µÄÊıÁ¿,ÍâÅÉ½ÓÊÜµÄÊıÁ¿
+void TripNoSelectionsolve(Task* task, multiset<Worker>* myWorkers, map<int, multiset<Worker>*> *otherWorkers, vector<tuple<int, int, float> >* M, map<int, vector<int>>* matchNum, map<int, vector<double>>* rev, float epsilon, float geoepsilon)//matchNum: id, æ­¤idä¸‹å®Œæˆçš„taskæ•°é‡,å¤–æ´¾å‡ºå»çš„æ•°é‡,å¤–æ´¾æ¥å—çš„æ•°é‡
 {
 	clock_t start, end, start1, end1, start2, end2;
 	int type = task->type;
@@ -1007,8 +799,8 @@ void TripNoSelectionsolve(Task* task, multiset<Worker>* myWorkers, map<int, mult
 		start = clock();
 		int angle = 0;
 		map<int, multiset<Worker>> ava_worker;
-		map<int, multiset<Worker>> per_worker;//ÈÅ¶¯ºóµÄ¹¤ÈË
-		map<int, multiset<Worker>> cal_PriceWorker;//ÓÃÀ´¹À¼ÛµÄ¹¤ÈË
+		map<int, multiset<Worker>> per_worker;
+		map<int, multiset<Worker>> cal_PriceWorker;
 		double duration = 0;
 		if (geoepsilon != 0) {
 			
@@ -1026,24 +818,18 @@ void TripNoSelectionsolve(Task* task, multiset<Worker>* myWorkers, map<int, mult
 			
 			pri_task.x = lat;
 			pri_task.y = lon;
-
-			//ÕâÒ»²½ÊÇÕÒ¿ÉÓÃ¹¤ÈË£¬ÓÃÓÚ¶¨¼Û¡£¶ÔÓÚÀ©µÄËã·¨£¬Ê×ÏÈÏÈÀ©°ë¾¶£¬ÔÙÕÒ¿ÉÓÃ¹¤ÈË
-
 			map<int, multiset<Worker>*>::iterator oti = otherWorkers->begin();
 			for (; oti != otherWorkers->end(); oti++)
 			{
 				map<int, multiset<Worker>> avaiWorker;
 				map<int, multiset<Worker>> perWorker;
 				map<int, multiset<Worker>> calPriceWorker;
-				//find_avai_worker(oti->second, &pri_task,&avaiWorker);
-				//À©Õ¹ºóµÄ°ë¾¶ÕÒ¿ÉÓÃ¹¤ÈË²¢ÈÅ¶¯
 				start = clock();
 				find_extended_avai_worker(oti->second, &pri_task, geoepsilon, angle, &avaiWorker, &perWorker, &calPriceWorker);
 				end = clock();
 				duration = ((double)(end - start) / CLK_TCK);
 				if (maxduration < duration)
 				{
-					//durationmx << "find_extended_avai_worker time cost: " << duration << endl;
 					maxduration = duration;
 				}
 
@@ -1059,26 +845,20 @@ void TripNoSelectionsolve(Task* task, multiset<Worker>* myWorkers, map<int, mult
 				}
 			}
 
-			//ava_worker = find_avai_worker(&otherWorkers, &pri_task);
-
 		}
 		else {
 			map<int, multiset<Worker>*>::iterator oti = otherWorkers->begin();
 			for (; oti != otherWorkers->end(); oti++)
 			{
-				//start1 = clock();
 				map<int, multiset<Worker>> avaiWorker;
 				find_avai_worker(oti->second, task, &avaiWorker);
 				if (!avaiWorker.empty())
 				{
 					ava_worker.insert(*avaiWorker.begin());
 				}
-				//end1 = clock();
-				//cout << " select " << ((double)(end1 - start1) / CLK_TCK);
+				
 			}
 
-
-			//ava_worker = find_avai_worker(&otherWorkers, task);
 		}
 
 
@@ -1121,10 +901,6 @@ void TripNoSelectionsolve(Task* task, multiset<Worker>* myWorkers, map<int, mult
 			return;
 		}
 
-		//¶¨¼Û³É¹¦£¬·ÅÈëÍ³¼ÆÖµ3ÄÚ¡£
-
-
-		//Ê×ÏÈÅĞ¶Ï¼Û¸ñÊÇ·ñĞ¡ÓÚ¶©µ¥¼Û¸ñ£¬Èç¹û²»Ğ¡ÓÚ£¬ËùÔÚÆ½Ì¨²»²ÎÓëºÏ×÷
 		map<int, float>::iterator ip = priceSet.begin();
 		vector<int> avaPlatform;
 		for (; ip != priceSet.end(); ip++)
@@ -1134,37 +910,26 @@ void TripNoSelectionsolve(Task* task, multiset<Worker>* myWorkers, map<int, mult
 				avaPlatform.push_back(ip->first);
 			}
 		}
-		if (avaPlatform.size() == 0)//Ã»ÓĞÆ½Ì¨¼Û¸ñĞ¡ÓÚ¶©µ¥¼Û¸ñ
+		if (avaPlatform.size() == 0)//æ²¡æœ‰å¹³å°ä»·æ ¼å°äºè®¢å•ä»·æ ¼
 		{
 			rejectByPrice++;
 			return;
 		}
 
-		//¸ù¾İ¼Û¸ñºÍÈÅ¶¯Î»ÖÃºóµÄ¹¤ÈËÑ¡ÔñÆ½Ì¨ Input: perturbed workers, request. Output: selected Platform.
 		string probfile = "eachprob";
 		float minPrice = 1000000;
-		//ofstream ep(probfile, ios::app);
-		//ep << "Task: " << task->id;
 		int selectedPlatform = -1;
 		for (map<int, float>::iterator im = priceSet.begin(); im!=priceSet.end(); im++)
 		{
 			if (minPrice > im->second) {
 				minPrice = im->second;
 				selectedPlatform = im->first;
-			
 			}
 		}
-		//ep << endl;
-
-
-
 		multiset<Worker> selectedWorker = ava_worker.find(selectedPlatform)->second;
 		float outerPrice = priceSet.find(selectedPlatform)->second;
-		//ffp << "Task id " << task->id << " Platform " << selectedPlatform << " OP: " << outerPrice << endl;
 
 		Worker other_aviWorker;
-		//ÕÒÈ«²¿µÄ¹¤ÈË
-		//¸ü¸Ä²¿·Ö
 		start = clock();
 		//other_aviWorker = find_other_worker(selectedWorker, outerPrice, task);
 		other_aviWorker = find_other_worker(selectedWorker, outerPrice, &pri_task);
@@ -1188,7 +953,6 @@ void TripNoSelectionsolve(Task* task, multiset<Worker>* myWorkers, map<int, mult
 				finishedOuterWorkerTasks.insert(make_pair(other_aviWorker.id, temp));
 			}
 			outworkertype = other_aviWorker.type;
-			//ord << "Task: " << task->id << " Type: " << task->type << " Finished Platform " << outworkertype << " Price " <<task->value<<" OuterP "<< outerPrice << endl;
 			map<int, multiset<Worker>*>::iterator imi = otherWorkers->find(other_aviWorker.type);
 			for (multiset<Worker>::iterator it = imi->second->begin(); it != imi->second->end(); it++)
 			{
@@ -1226,7 +990,6 @@ void TripNoSelectionsolve(Task* task, multiset<Worker>* myWorkers, map<int, mult
 			}
 
 			map<int, vector<double>>::iterator revI = rev->find(type);
-			//¼ÆËãtaskËùÔÚÆ½Ì¨µÄÊÕÒæ
 			if (revI != rev->end())
 			{
 				float revn = revI->second[0];
@@ -1247,8 +1010,6 @@ void TripNoSelectionsolve(Task* task, multiset<Worker>* myWorkers, map<int, mult
 				re.push_back(0);
 				rev->insert(make_pair(type, re));
 			}
-
-			//ºÏ×÷Æ½Ì¨rev¸üĞÂ
 			revI = rev->find(outworkertype);
 			if (revI != rev->end())
 			{
@@ -1271,29 +1032,12 @@ void TripNoSelectionsolve(Task* task, multiset<Worker>* myWorkers, map<int, mult
 				re.push_back(outerPrice);
 				rev->insert(make_pair(type, re));
 			}
-
-			//Êä³öouter r
-			/*if (outworkertype == 1)
-			{
-				out1 << task->arrive << " " << task->value << " " << outerPrice << endl;
-			}
-
-			if (outworkertype == 2)
-			{
-				out2 << task->arrive << " " << task->value << " " << outerPrice << endl;
-			}
-
-			if (outworkertype == 3)
-			{
-				out3 << task->arrive << " " << task->value << " " << outerPrice << endl;
-			}*/
 		}
 		end = clock();
-		//cout << " out " << ((double)(end - start) / CLK_TCK) << endl;
 	}
 }
 
-void get_othertasks(vector<Task>* tasks, map<int,multiset<vector<float>>>* othertasks, int typenum) { //¼Ó
+void get_othertasks(vector<Task>* tasks, map<int,multiset<vector<float>>>* othertasks, int typenum) { 
 	cout << "get_othertasks start .... " << endl;
 	map<int, multiset<vector<float>>> mytasks;
 	for (int i = 0; i < (*tasks).size(); i++) {
@@ -1475,9 +1219,6 @@ void basedMatch(map<int, multiset<Worker>*>* workers, vector<Task>* tasks, vecto
 			//TripNoSelectionsolve(&temp, myworker, &otherworker3, M, matchNum, rev, epsilon, geoepsilon);
 		}
 		
-
-		
-		//solve(&temp, myworkers, otherworkers, &(othertask.find(temp.type)->second), M, matchNum, rev, typenum,0.7);
 	}
 	string calFile = "calFile";
 	ofstream ofc(calFile,ios::app);
