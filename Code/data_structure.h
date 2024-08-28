@@ -11,10 +11,10 @@ struct Worker
 	int id;
 	float x, y, radius;
 	float per_x, per_y;
-	int arrive; // 当前是否到达
-	int available; //当前是否被派出
+	int arrive; 
+	int available; 
 	vector<float> history_value;
-	map<string, int> num_avgPrice;//均价 个数
+	map<string, int> num_avgPrice;
 	int type;
 	
 
