@@ -286,9 +286,6 @@ void get_timerange(vector<Task>* tasks, vector<int>* timerange) {
 
 void cal_rev(vector<Worker>* all_workers, vector<Task>* tasks, vector<tuple<int, int, float> >* M, float* rev1, float* rev2, int* task_1, int* task_2)
 {
-	//ofstream fout("static_k5_" + to_string(rand()), ios::app);
-	/*map<string, int> v;
-	map<string, int>::iterator it;*/
 	*rev1 = 0.0, * rev2 = 0.0;
 	*task_1 = 0, * task_2 = 0;
 	for (int i = 0; i < M->size(); i++)
@@ -326,7 +323,7 @@ void cal_rev(vector<Worker>* all_workers, vector<Task>* tasks, vector<tuple<int,
 
 }
 
-void get_tasksrange(vector<Task>* tasks, vector<int> timerange, map<int, vector<Task>>* tasksrange) { // ¸ù¾İÊ±¼ä¶Î½«ËùÓĞµÄÈÎÎñ»¯Îª3²¿·Ö
+void get_tasksrange(vector<Task>* tasks, vector<int> timerange, map<int, vector<Task>>* tasksrange) { // æ ¹æ®æ—¶é—´æ®µå°†æ‰€æœ‰çš„ä»»åŠ¡åŒ–ä¸º3éƒ¨åˆ†
 	vector<Task>::iterator ite = tasks->begin();
 	for (; ite != tasks->end(); ite++) {
 		Task tmp = *ite;
@@ -405,37 +402,27 @@ int main(int argc, char* argv[])
 	float este = 0.7;
 	string outputfile = "new_syn/new_R/testmemo";
 
-	vector<Worker> all_workers; // ¸ù¾İµ½´ïÊ±¼äÅÅĞò£¬ËùÓĞworker
-	vector<Task> tasks; // ¸ù¾İÈ«¾Öµ½´ïÊ±¼äÅÅĞò£¬index¼´Îªid
+	vector<Worker> all_workers; 
+	vector<Task> tasks; 
 	vector<tuple<int, int, float> > M;
-	int typenum = 3; // ¹«Ë¾ÊıÁ¿
+	int typenum = 3; // å…¬å¸æ•°é‡
 	map<int, Worker> workerSet;
 	string output;
 	map<int, vector<int>> matchNum;
 	map<int, vector<double>> rev;
-	//string outputfile = "test_pri.txt";
 
 	for (int i = 0; i < workernum.size(); i++) {
-		/*requestfile = "new_syn/request-";
-		requestfile = requestfile + to_string(tasknum[i]) + "_new";*/
+		
 		all_workers.clear();
 		tasks.clear();
 		clock_t start, end;
 		string worker_file, task_file;
-		////worker_file = "gps_20161115_W";
-		////task_file = "gps_20161115_O";
 		workerfile = "new_syn/worker-";
 		workerfile = workerfile + to_string(workernum[i]);
-		////task_file = "20161115task";
 		worker_file = workerfile;
 		task_file = requestfile;
-		////string outputfile = "empty.txt";
 		ofstream fout(outputfile, ios::app);
 		read_file(worker_file, task_file, &all_workers, &tasks, 1);
-		//cout << all_workers.begin()->arrive<<" later"<<all_workers.rbegin()->arrive;
-
-		//get_otherworkers(&all_workers, &myWorkers, &otherWorkers, typenum);
-
 		map<int, multiset<Worker>*> workers;
 		multiset<Worker> w1, w2, w3;
 		workers.insert(make_pair(1, &w1));
@@ -446,7 +433,6 @@ int main(int argc, char* argv[])
 		fout << " Workers: " << 500;
 		fout << " Tasks: " << 2500;
 		fout << " Radius: " << 1;
-
 		fout << " Geo epsilon: " << geoe << "Pricing epsilon: " << este << endl;
 		start = clock();
 		basedMatch(&workers, &tasks, &M, &matchNum, &rev, este, geoe);
@@ -454,76 +440,13 @@ int main(int argc, char* argv[])
 		double duration;
 		duration = ((double)(end - start) / CLK_TCK);
 		duration /= 60;
-		//cout << "³ÌĞòÔËĞĞÊ±¼äÎª£º" << duration << "min" << endl;
 		printresult(matchNum, rev, outputfile);
-		fout << "Time£º" << duration << "min" << endl << endl;
+		fout << "Timeï¼š" << duration << "min" << endl << endl;
 		workers.clear();
 		M.clear();
 		matchNum.clear();
 		rev.clear();
 	}
 
-
-
-
-	
-	
-	
-	float epsilon = 0.7;
-	float geoepsilon = 0.7;
-	int test = 0;
-	//for (int i = 0; i < 4; i++)
-	//{
-	//		map<int, multiset<Worker>*> workers;
-	//		multiset<Worker> w1, w2, w3;
-	//		workers.insert(make_pair(1, &w1));
-	//		workers.insert(make_pair(2, &w2));
-	//		workers.insert(make_pair(3, &w3));
-	//		getWorkers(&all_workers, &workers);
-	//		cout << "Pricing epsilon: " << eset[i] << "Geo epsilon: " << geoepsilon << endl;
-	//		fout << "Pricing epsilon: " << eset[i] << "Geo epsilon: " << geoepsilon << endl;
-	//		start = clock();
-	//		basedMatch(&workers, &tasks, &M, &matchNum, &rev, eset[i], geoepsilon);
-	//		end = clock();
-	//		double duration;
-	//		duration = ((double)(end - start) / CLK_TCK);
-	//		//duration /= 60;
-	//		//cout << "³ÌĞòÔËĞĞÊ±¼äÎª£º" << duration << "min" << endl;
-	//		printresult(matchNum, rev, outputfile);
-	//		fout << "Time£º" << duration << "min" << endl << endl;
-	//		workers.clear();
-	//		M.clear();
-	//		matchNum.clear();
-	//		rev.clear();
-	//	}
-
-		//for (int i = 0; i < 4; i++)
-		//{
-		//	map<int, multiset<Worker>*> workers;
-		//	multiset<Worker> w1, w2, w3;
-		//	workers.insert(make_pair(1, &w1));
-		//	workers.insert(make_pair(2, &w2));
-		//	workers.insert(make_pair(3, &w3));
-		//	getWorkers(&all_workers, &workers);
-		//	fout << "Pricing epsilon: " << epsilon << "Geo epsilon: " << geset[i] << endl;
-		//	cout << "Pricing epsilon: " << epsilon << "Geo epsilon: " << geset[i] << endl;
-		//	start = clock();
-		//	basedMatch(&workers, &tasks, &M, &matchNum, &rev, epsilon, geset[i]);
-		//	end = clock();
-		//	double duration;
-		//	duration = ((double)(end - start) / CLK_TCK);
-		//	//duration /= 60;
-		//	//cout << "³ÌĞòÔËĞĞÊ±¼äÎª£º" << duration << "min" << endl;
-		//	printresult(matchNum, rev, outputfile);
-		//	workers.clear();
-		//	M.clear();
-		//	matchNum.clear();
-		//	rev.clear();
-		//}
-	float rev1, rev2;
-	int task_1, task_2;
-	//cal_rev(&all_workers, &tasks, &M, &rev1, &rev2, &task_1, &task_2);
-	//cout << rev1 << "\t" << task_1 << "/" << M.size() << "\t" << rev2 << "\t" << task_2 << "/" << M.size() << "\t" << endl;
-	//fout << rev1 << "\t" << task_1 << "/" << M.size() << "\t" << rev2 << "\t" << task_2 << "/" << M.size() << "\t" << endl;
 
 }
