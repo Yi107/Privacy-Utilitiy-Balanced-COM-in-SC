@@ -8,8 +8,6 @@ struct EllipsoidParameter
 {
 	double a, b, f;
 	double e2, ep2;
-
-	// 高斯投影参数
 	double c;
 	double a0, a2, a4, a6;
 
@@ -40,7 +38,7 @@ struct EllipsoidParameter
 
 	EllipsoidParameter(double ia, double ib)
 	{
-		if (ib > 1000000)    // ib 是短半轴
+		if (ib > 1000000)   
 		{
 			a = ia;
 			b = ib;
@@ -49,7 +47,7 @@ struct EllipsoidParameter
 			e2 = (a * a - b * b) / (a * a);
 			ep2 = (a * a - b * b) / (b * b);
 		}
-		else if (ib < 1)    // ib 是椭球第一偏心率的平方
+		else if (ib < 1)    
 		{
 			a = ia;
 			e2 = ib;
