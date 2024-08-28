@@ -1,22 +1,20 @@
 #include "stdafx.h"
 
 #define PI                      3.141592654
-#define EARTH_RADIUS            6378.137        //地球近似半径
+#define EARTH_RADIUS            6378.137      
 
-//两点的距离（纬度，经度）
 double get_distance(double lat1, double lng1, double lat2, double lng2)
 {
-	double radLat1 = lat1 * PI / 180.0;   //角度1? = π / 180
-	double radLat2 = lat2 * PI / 180.0;   //角度1? = π / 180
-	double a = radLat1 - radLat2;//纬度之差
-	double b = lng1 * PI / 180.0 - lng2 * PI / 180.0;  //经度之差
+	double radLat1 = lat1 * PI / 180.0;   
+	double radLat2 = lat2 * PI / 180.0;   
+	double a = radLat1 - radLat2;
+	double b = lng1 * PI / 180.0 - lng2 * PI / 180.0;  
 	double dst = 2 * asin((sqrt(pow(sin(a / 2), 2) + cos(radLat1) * cos(radLat2) * pow(sin(b / 2), 2))));
 	dst = dst * EARTH_RADIUS;
 	dst = round(dst * 10000) / 10000;
 	return dst;
 }
 
-//计算角度
 int get_angle(double lat1, double lng1, double lat2, double lng2)
 {
 	double x = lat1 - lat2;//t d
