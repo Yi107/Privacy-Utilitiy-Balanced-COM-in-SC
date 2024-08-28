@@ -13,16 +13,10 @@ using namespace std;
 
 double fasterlambertw(double x)
 {
-
-
-
 	double logterm = log(-x);
 	double loglogterm = log(-logterm);
-
-
 	double w = logterm - loglogterm + loglogterm / logterm;
 	double expw = exp(-w);
-
 	return (w * w + expw * x) / (1.0f + w);
 }
 
@@ -86,7 +80,6 @@ void set_privacy(float x, float y, float epsilon, float* newx, float* newy)
 
 float noisyCount(float sensitivity, float epsilon)
 {
-	//assert(epsilon > 0);
 	double d = unidistribute(0, 1);
 
 	float uniform = (float)d - 0.5;
@@ -115,7 +108,6 @@ float randomNum(float *random)
 	random_device rd;
 	mt19937 eng(rd());
 	uniform_real_distribution<float> distr(0.0f, 1.0f);
-
 	float random_num = distr(eng);
 	*random = random_num;
 	return 0;
@@ -142,7 +134,6 @@ float noiseSettingForLocal(float epsilon, float radius, float *noise)
 
 void locationPerturb(double real_lat, double real_lon, float epsilon, float radius, double *perturbed_lat, double *perturbed_lon, int *angle)
 {
-	
 	int random = 0;
 	randomAngle(&random);
 	*angle = random;
@@ -155,23 +146,15 @@ void locationPerturb(double real_lat, double real_lon, float epsilon, float radi
 	float newx = 0, newy = 0;
 	double lat, lon, ht;
 	ztGCT.BL2XY(real_lat, real_lon, lx, ly);
-	//cout << lx << " " << ly << endl;
 	lx = lx / 1000;
 	ly = ly / 1000;
-	//cout << rrand << endl;
-	//location privacy alogrithm need to be changed. Input lat,lng, out put: perturbed lat lng, theta
-	//set_privacy(lx, ly, geoepsilon, &newx, &newy);
 	newx = lx + cosValue *rrand;
 	newy = ly + sinValue *rrand;
 	newx = newx * 1000;
 	newy = newy * 1000;
-	//cout << newx << " " << newy << endl;
-	
 	ztGCT.XY2BL(newx, newy, lat, lon);
 	*perturbed_lat = lat;
 	*perturbed_lon = lon;
-	//cout << lat << " " << lon << endl;
-
 }
 
 
@@ -208,17 +191,11 @@ void avaWLocationPerturb(double real_lat, double real_lon, int angle, double *pe
 	float newx = 0, newy = 0;
 	double lat, lon, ht;
 	ztGCT.BL2XY(real_lat, real_lon, lx, ly);
-	//cout << lx << " " << ly << endl;
 	lx = lx / 1000;
 	ly = ly / 1000;
-	//cout << rrand << endl;
-	//location privacy alogrithm need to be changed. Input lat,lng, out put: perturbed lat lng, theta
-	//set_privacy(lx, ly, geoepsilon, &newx, &newy);
 	newx = lx + cosValue * randz;
 	newy = ly + sinValue * randz;
 	newx = newx * 1000;
 	newy = newy * 1000;
-	//cout << newx << " " << newy << endl;
 	ztGCT.XY2BL(newx, newy, *perturbed_lat, *perturbed_lon);
-
 }
